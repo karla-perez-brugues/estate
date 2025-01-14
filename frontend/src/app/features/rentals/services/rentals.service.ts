@@ -15,8 +15,8 @@ export class RentalsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public all(): Observable<RentalsResponse> {
-    return this.httpClient.get<RentalsResponse>(this.pathService);
+  public all(): Observable<Rental[]> {
+    return this.httpClient.get<Rental[]>(this.pathService);
   }
 
   public detail(id: string): Observable<Rental> {
