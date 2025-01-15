@@ -5,7 +5,6 @@ import { Rental } from 'src/app/features/rentals/interfaces/rental.interface';
 import { RentalResponse } from '../interfaces/api/rentalResponse.interface';
 import { RentalsResponse } from '../interfaces/api/rentalsResponse.interface';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,8 +14,8 @@ export class RentalsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public all(): Observable<Rental[]> {
-    return this.httpClient.get<Rental[]>(this.pathService);
+  public all(): Observable<RentalsResponse> {
+    return this.httpClient.get<RentalsResponse>(this.pathService);
   }
 
   public detail(id: string): Observable<Rental> {
