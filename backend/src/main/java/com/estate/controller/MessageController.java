@@ -1,9 +1,8 @@
 package com.estate.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +15,10 @@ public class MessageController {
 
 	@Autowired
 	private MessageRepository messageRepository;
-	
-	@GetMapping("/messages")
-	public List<Message> getAllUsers() {
-		return messageRepository.findAll();
+
+	@PostMapping("/messages")
+	public Message createMessage(@RequestBody Message message) {
+		return messageRepository.save(message);
 	}
 	
 }
