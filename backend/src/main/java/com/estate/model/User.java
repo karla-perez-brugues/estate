@@ -1,6 +1,7 @@
 package com.estate.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,12 @@ public class User implements UserDetails {
 	
 	@Column(name = "password")
 	private String password;
+
+	@Column(name = "created_at")
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	private Date updatedAt;
 	
 	public User() {}
 	
@@ -73,13 +80,28 @@ public class User implements UserDetails {
 	}
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of();
-	}
-
-	@Override
 	public String getUsername() {
 		return this.email;
 	}
 
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of();
+	}
 }

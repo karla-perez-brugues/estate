@@ -1,7 +1,9 @@
 package com.estate.controller;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import com.estate.dto.UserDTO;
+import com.estate.model.User;
 import io.swagger.v3.oas.annotations.Operation;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,6 +26,9 @@ public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationService authenticationService;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Operation(summary = "Create new user")
 	@PostMapping("/register")
@@ -40,10 +44,15 @@ public class AuthenticationController {
 
 	@Operation(summary = "Get current authenticated user details")
 	@GetMapping("/me") 
-	public ResponseEntity<UserDetails> me(Authentication authentication) { 
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		// TODO: create DTO, do not send entity
-		return ResponseEntity.ok(userDetails);
+	public ResponseEntity<UserDTO> me(Authentication authentication) {
+		User user = (User) authentication.getPrincipal();
+		UserDTO userDTO = convertToDTO(user);
+
+		return ResponseEntity.ok(userDTO);
+	}
+
+	private UserDTO convertToDTO(User user) {
+		return modelMapper.map(user, UserDTO.class);
 	}
 
 }
