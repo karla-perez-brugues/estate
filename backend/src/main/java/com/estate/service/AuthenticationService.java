@@ -2,7 +2,9 @@ package com.estate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,17 +47,19 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(AuthenticationRequest request) {
 
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()
-            )
-        );
-
-        // todo: throw credentials error
-
         User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
+
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+            );
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException(e.getMessage());
+        }
 
         String jwt = jwtService.generateToken(user);
 
