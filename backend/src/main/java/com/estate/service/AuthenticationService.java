@@ -10,7 +10,7 @@ import com.estate.authentication.AuthenticationRequest;
 import com.estate.authentication.AuthenticationResponse;
 import com.estate.authentication.RegisterRequest;
 import com.estate.exception.ResourceNotFoundException;
-import com.estate.model.DBUser;
+import com.estate.model.User;
 import com.estate.repository.UserRepository;
 
 @Service
@@ -29,7 +29,7 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        DBUser user = new DBUser(
+        User user = new User(
             request.getEmail(),
             request.getName(),
             passwordEncoder.encode(request.getPassword())
@@ -54,7 +54,7 @@ public class AuthenticationService {
 
         // todo: throw credentials error
 
-        DBUser user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
 
         String jwt = jwtService.generateToken(user);
