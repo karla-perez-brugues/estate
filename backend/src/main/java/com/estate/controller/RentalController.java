@@ -2,6 +2,7 @@ package com.estate.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +25,35 @@ public class RentalController {
 
 	@Autowired
 	private RentalRepository rentalRepository;
-	
+
+	@Operation(summary = "Get all rentals")
 	@GetMapping("/rentals")
 	public ResponseEntity<Object> getAllUsers() {
 		List<Rental> rentals = rentalRepository.findAll();
 
 		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentals);
 	}
-	
+
+	@Operation(summary = "Create new rental")
 	@PostMapping("/rentals")
 	public Rental createRental(@RequestBody Rental rental) {
+		// todo: manage pictures
+
+		// TODO: return response message and status code, do not return entity
 		return rentalRepository.save(rental);
 	}
 
+	@Operation(summary = "Get rental by id")
 	@GetMapping("/rentals/{id}")
 	public ResponseEntity<Rental> getRentalById(@PathVariable Integer id) {
 		Rental rental = rentalRepository.findById(id)
-		.orElseThrow(() -> new ResourceNotFoundException("Rental does not exist"));
-		
+			.orElseThrow(() -> new ResourceNotFoundException("Rental does not exist"));
+
+		// TODO: return response message and status code, do not return entity
 		return ResponseEntity.ok(rental);
 	}
 
+	@Operation(summary = "Edit one rental")
 	@PutMapping("/rentals/{id}")
 	public ResponseEntity<Rental> updateRental(@PathVariable Integer id, @RequestBody Rental rentalData) {
 		Rental rental = rentalRepository.findById(id)
