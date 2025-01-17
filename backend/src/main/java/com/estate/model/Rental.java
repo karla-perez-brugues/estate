@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "rentals")
 public class Rental {
@@ -33,10 +35,16 @@ public class Rental {
 	
 	@ManyToOne
 	private User owner;
+
+	@Column(name = "created_at")
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	private Date updatedAt;
 	
 	public Rental() {}
 
-	public Rental(String name, Float surface, Float price, String picture, String description, User owner) {
+	public Rental(String name, Float surface, Float price, String picture, String description, User owner, Date createdAt, Date updatedAt) {
 		super();
 		this.name = name;
 		this.surface = surface;
@@ -44,6 +52,8 @@ public class Rental {
 		this.picture = picture;
 		this.description = description;
 		this.owner = owner;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
 	}
 
 	public Integer getId() {
@@ -101,5 +111,20 @@ public class Rental {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 }

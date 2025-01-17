@@ -1,10 +1,15 @@
 package com.estate.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.estate.dto.RentalDTO;
+import com.estate.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,50 +29,63 @@ import com.estate.repository.RentalRepository;
 public class RentalController {
 
 	@Autowired
-	private RentalRepository rentalRepository;
+	private RentalService rentalService;
+
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Operation(summary = "Get all rentals")
 	@GetMapping("/rentals")
 	public ResponseEntity<Object> getAllUsers() {
-		List<Rental> rentals = rentalRepository.findAll();
+		List<Rental> rentals = rentalService.getAllRentals();
+		List<RentalDTO> rentalDTOS = rentals.stream().map(this::convertToDto).toList();
 
-		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentals);
+		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentalDTOS);
 	}
 
 	@Operation(summary = "Create new rental")
 	@PostMapping("/rentals")
-	public Rental createRental(@RequestBody Rental rental) {
+	public ResponseEntity<Object> createRental(@RequestBody Rental rental) {
 		// todo: manage pictures
 
-		// TODO: return response message and status code, do not return entity
-		return rentalRepository.save(rental);
+		ResponseEntity<Object> response;
+
+		try {
+			rentalService.createRental(rental);
+			response = ResponseHandler.generateResponse("message", HttpStatus.CREATED, "Rental created !");
+		} catch (Exception e) {
+			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to create rental");
+		}
+
+		return response;
 	}
 
 	@Operation(summary = "Get rental by id")
 	@GetMapping("/rentals/{id}")
-	public ResponseEntity<Rental> getRentalById(@PathVariable Integer id) {
-		Rental rental = rentalRepository.findById(id)
-			.orElseThrow(() -> new ResourceNotFoundException("Rental does not exist"));
+	public ResponseEntity<RentalDTO> getRentalById(@PathVariable Integer id) {
+		Rental rental = rentalService.getRental(id);
+		RentalDTO rentalDTO = convertToDto(rental);
 
-		// TODO: return response message and status code, do not return entity
-		return ResponseEntity.ok(rental);
+		return ResponseEntity.ok(rentalDTO);
 	}
 
 	@Operation(summary = "Edit one rental")
-	@PutMapping("/rentals/{id}")
-	public ResponseEntity<Rental> updateRental(@PathVariable Integer id, @RequestBody Rental rentalData) {
-		Rental rental = rentalRepository.findById(id)
-		.orElseThrow(() -> new ResourceNotFoundException("Rental does not exist"));
+	@PutMapping(value = "/rentals/{id}", consumes = MediaType.APPLICATION_JSON_VALUE) // FIXME: HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=----WebKitFormBoundaryS8d20PWFMVftQKJ2' is not supported
+	public ResponseEntity<Object> updateRental(@PathVariable Integer id, @RequestBody Rental rentalData) {
+		ResponseEntity<Object> response;
 
-		rental.setName(rentalData.getName());
-		rental.setSurface(rentalData.getSurface());
-		rental.setPrice(rentalData.getPrice());
-		rental.setPicture(rentalData.getPicture());
-		rental.setDescription(rentalData.getDescription());
+		try {
+			rentalService.updateRental(id, rentalData);
+			response = ResponseHandler.generateResponse("message", HttpStatus.OK, "Rental updated !");
+		} catch (Exception e) {
+			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to update rental");
+		}
 
-		Rental updatedRental = rentalRepository.save(rental);
+		return response;
+	}
 
-		return ResponseEntity.ok(updatedRental);
+	private RentalDTO convertToDto(Rental rental) {
+		return modelMapper.map(rental, RentalDTO.class);
 	}
 	
 }
