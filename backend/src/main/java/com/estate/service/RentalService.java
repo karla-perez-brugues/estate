@@ -20,7 +20,6 @@ public class RentalService {
     }
 
     public void createRental(Rental rental) {
-        // todo: manage pictures
         rentalRepository.save(rental);
     }
 
