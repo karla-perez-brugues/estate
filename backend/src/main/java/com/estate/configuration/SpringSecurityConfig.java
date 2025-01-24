@@ -33,7 +33,7 @@ public class SpringSecurityConfig {
         	.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(requests -> requests
-                    .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**")
+                    .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api/rentals/picture/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

@@ -14,10 +14,10 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class StorageService {
 
-    private final String uploadDir = "/uploads";
+    private final String uploadDir = "uploads";
     private final Path uploadPath = Paths.get(uploadDir);
 
-    public void store(MultipartFile file) throws IOException {
+    public String store(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
@@ -28,6 +28,13 @@ public class StorageService {
         InputStream inputStream = file.getInputStream();
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        return file.getOriginalFilename();
+    }
+
+    public byte[] retrieve(String fileName) throws IOException {
+        Path filePath = uploadPath.resolve(fileName);
+        return Files.readAllBytes(filePath);
     }
 
 }

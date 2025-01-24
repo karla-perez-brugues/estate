@@ -1,11 +1,15 @@
 package com.estate.controller;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import com.estate.dto.RentalDTO;
+import com.estate.model.User;
 import com.estate.service.RentalService;
 import com.estate.service.StorageService;
+import com.estate.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,9 @@ public class RentalController {
 	@Autowired
 	private StorageService storageService;
 
+	@Autowired
+	private UserService userService;
+
 	@Operation(summary = "Get all rentals")
 	@GetMapping("/rentals")
 	public ResponseEntity<Object> getAllUsers() {
@@ -41,10 +48,28 @@ public class RentalController {
 	}
 
 	@Operation(summary = "Create new rental")
-	@PostMapping(value = "/rentals", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) // FIXME: HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=----WebKitFormBoundaryS8d20PWFMVftQKJ2' is not supported
-	public ResponseEntity<Object> createRental(@RequestBody Rental rental, @RequestParam("picture") MultipartFile file) throws IOException {
-		storageService.store(file);
-		rental.setPicture(file.getOriginalFilename());
+	@PostMapping(value = "/rentals", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> createRental(
+			@RequestParam("name") String name,
+			@RequestParam("surface") Float surface,
+			@RequestParam("price") Float price,
+			@RequestParam("picture") MultipartFile file,
+			@RequestParam("description") String description,
+			Principal principal
+	) throws IOException {
+		String pictureName = storageService.store(file);
+
+		User owner = userService.findByEmail(principal.getName());
+
+		Rental rental = new Rental();
+		rental.setName(name);
+		rental.setSurface(surface);
+		rental.setPrice(price);
+		rental.setPicture(rentalService.getPictureLocation(pictureName));
+		rental.setDescription(description);
+		rental.setOwner(owner);
+		rental.setCreatedAt(new Date());
+		rental.setUpdatedAt(new Date());
 
 		ResponseEntity<Object> response;
 
@@ -68,18 +93,29 @@ public class RentalController {
 	}
 
 	@Operation(summary = "Edit one rental")
-	@PutMapping(value = "/rentals/{id}", consumes = MediaType.APPLICATION_JSON_VALUE) // FIXME: HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=----WebKitFormBoundaryS8d20PWFMVftQKJ2' is not supported
-	public ResponseEntity<Object> updateRental(@PathVariable Integer id, @RequestBody Rental rental) {
+	@PutMapping(value = "/rentals/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> updateRental(
+			@PathVariable Integer id,
+			@RequestParam("name") String name,
+			@RequestParam("surface") Float surface,
+			@RequestParam("price") Float price,
+			@RequestParam("description") String description
+	) {
 		ResponseEntity<Object> response;
 
 		try {
-			rentalService.updateRental(id, rental);
+			rentalService.updateRental(id, name, surface, price, description);
 			response = ResponseHandler.generateResponse("message", HttpStatus.OK, "Rental updated !");
 		} catch (Exception e) {
 			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to update rental");
 		}
 
 		return response;
+	}
+
+	@GetMapping(value = "/rentals/picture/{pictureName}")
+	public @ResponseBody byte[] getPicture(@PathVariable String pictureName) throws IOException {
+		return storageService.retrieve(pictureName);
 	}
 
 	private RentalDTO convertToDto(Rental rental) {

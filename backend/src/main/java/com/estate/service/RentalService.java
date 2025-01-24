@@ -27,24 +27,25 @@ public class RentalService {
         return rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
     }
 
-    public void updateRental(Integer id, Rental data) {
+    public void updateRental(
+            Integer id,
+            String name,
+            Float surface,
+            Float price,
+            String description
+        ) {
         Rental rental = getRental(id);
 
-        if (data.getName() != null) {
-            rental.setName(data.getName());
-        }
-        if (data.getSurface() != null) {
-            rental.setSurface(data.getSurface());
-        }
-        if (data.getPrice() != null) {
-            rental.setPrice(data.getPrice());
-        }
-        if (data.getDescription() != null) {
-            rental.setDescription(data.getDescription());
-        }
-
+        rental.setName(name);
+        rental.setSurface(surface);
+        rental.setPrice(price);
+        rental.setDescription(description);
         rental.setUpdatedAt(new Date());
 
         rentalRepository.save(rental);
+    }
+
+    public String getPictureLocation(String pictureName) {
+        return "http://localhost:3001/api/rentals/picture/" + pictureName;
     }
 }
