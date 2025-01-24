@@ -59,6 +59,7 @@ public class RentalController {
 	) throws IOException {
 		String pictureName = storageService.store(file);
 
+		// FIXME : move this to rental service
 		User owner = userService.findByEmail(principal.getName());
 
 		Rental rental = new Rental();

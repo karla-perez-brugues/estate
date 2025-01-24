@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "messages")
 public class Message {
@@ -24,14 +26,22 @@ public class Message {
 	
 	@Column(name = "message")
 	private String message;
-	
+
+	@Column(name = "created_at")
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	private Date updatedAt;
+
 	public Message() {}
 
-	public Message(Rental rental, User user, String message) {
+	public Message(Rental rental, User user, String message, Date createdAt, Date updatedAt) {
 		super();
 		this.rental = rental;
 		this.user = user;
 		this.message = message;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
 	}
 
 	public Integer getId() {
@@ -64,6 +74,22 @@ public class Message {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 }
