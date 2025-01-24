@@ -39,11 +39,13 @@ public class User implements UserDetails {
 	
 	public User() {}
 	
-	public User(String email, String name, String password) {
+	public User(String email, String name, String password, Date createdAt, Date updatedAt) {
 		super();
 		this.email = email;
 		this.name = name;
 		this.password = password;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
 	}
 
 	public Integer getId() {

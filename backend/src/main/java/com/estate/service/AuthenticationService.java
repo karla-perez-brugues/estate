@@ -15,6 +15,8 @@ import com.estate.exception.ResourceNotFoundException;
 import com.estate.model.User;
 import com.estate.repository.UserRepository;
 
+import java.util.Date;
+
 @Service
 public class AuthenticationService {
 
@@ -31,10 +33,14 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Date now = new Date();
+
         User user = new User(
             request.getEmail(),
             request.getName(),
-            passwordEncoder.encode(request.getPassword())
+            passwordEncoder.encode(request.getPassword()),
+            now,
+            now
         );
 
         userRepository.save(user);
@@ -47,8 +53,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(AuthenticationRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("User does not exist"));
 
         try {
             authenticationManager.authenticate(
