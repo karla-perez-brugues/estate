@@ -5,6 +5,7 @@ import { Rental } from 'src/app/features/rentals/interfaces/rental.interface';
 import { RentalResponse } from '../interfaces/api/rentalResponse.interface';
 import { RentalsResponse } from '../interfaces/api/rentalsResponse.interface';
 
+
 @Injectable({
   providedIn: 'root'
 })

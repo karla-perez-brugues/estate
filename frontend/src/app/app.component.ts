@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    // this.autoLog(); FIXME
+    this.autoLog();
   }
 
   public $isLogged(): Observable<boolean> {
