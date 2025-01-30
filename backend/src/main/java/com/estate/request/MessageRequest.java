@@ -1,15 +1,15 @@
-package com.estate.dto;
+package com.estate.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MessageDTO {
+public class MessageRequest {
     private String message;
     private Integer userId;
     private Integer rentalId;
 
-    public MessageDTO() {}
+    public MessageRequest() {}
 
-    public MessageDTO(String message, Integer userId, Integer rentalId) {
+    public MessageRequest(String message, Integer userId, Integer rentalId) {
         this.message = message;
         this.userId = userId;
         this.rentalId = rentalId;

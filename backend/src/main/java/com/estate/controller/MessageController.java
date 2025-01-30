@@ -1,6 +1,6 @@
 package com.estate.controller;
 
-import com.estate.dto.MessageDTO;
+import com.estate.request.MessageRequest;
 import com.estate.handler.ResponseHandler;
 import com.estate.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,13 +22,13 @@ public class MessageController {
 	@Operation(summary = "Create new message")
 	@PostMapping("/messages")
 	public HttpEntity<Object> createMessage(
-			@RequestBody MessageDTO messageDTO,
+			@RequestBody MessageRequest messageRequest,
 			Principal principal
 	) {
 		ResponseEntity<Object> response;
 
 		try {
-			messageService.create(messageDTO.getMessage(), principal.getName(), messageDTO.getRentalId());
+			messageService.create(messageRequest, principal);
 			response = ResponseHandler.generateResponse("message", HttpStatus.CREATED, "Message sent successfully !");
 		} catch (Exception e) {
 			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to send message");

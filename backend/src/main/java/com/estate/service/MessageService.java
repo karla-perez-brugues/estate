@@ -4,9 +4,11 @@ import com.estate.model.Message;
 import com.estate.model.Rental;
 import com.estate.model.User;
 import com.estate.repository.MessageRepository;
+import com.estate.request.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Date;
 
 @Service
@@ -22,13 +24,12 @@ public class MessageService {
     private RentalService rentalService;
 
     public void create(
-            String textMessage,
-            String userEmail,
-            Integer rentalId
+        MessageRequest messageRequest,
+        Principal principal
     ) {
-        Rental rental = rentalService.getRental(rentalId);
-        User user = userService.findByEmail(userEmail);
-        Message message = new Message(rental, user, textMessage, new Date(), new Date());
+        Rental rental = rentalService.getRental(messageRequest.getRentalId());
+        User user = userService.findByEmail(principal.getName());
+        Message message = new Message(rental, user, messageRequest.getMessage(), new Date(), new Date());
 
         messageRepository.save(message);
     }
