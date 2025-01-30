@@ -40,9 +40,9 @@ public class RentalController {
 	@GetMapping("/rentals")
 	public ResponseEntity<Object> getAllUsers() {
 		List<Rental> rentals = rentalService.getAllRentals();
-		List<RentalResponse> rentalDTOS = rentals.stream().map(this::convertToResponse).toList();
+		List<RentalResponse> rentalsResponse = rentals.stream().map(this::convertToResponse).toList();
 
-		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentalDTOS);
+		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentalsResponse);
 	}
 
 	@Operation(summary = "Create new rental")
