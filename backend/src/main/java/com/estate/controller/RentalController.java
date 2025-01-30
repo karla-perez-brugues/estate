@@ -2,11 +2,10 @@ package com.estate.controller;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
-import com.estate.dto.RentalDTO;
-import com.estate.model.User;
+import com.estate.request.RentalRequest;
+import com.estate.response.RentalResponse;
 import com.estate.service.RentalService;
 import com.estate.service.StorageService;
 import com.estate.service.UserService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.estate.handler.ResponseHandler;
 import com.estate.model.Rental;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/")
@@ -42,7 +40,7 @@ public class RentalController {
 	@GetMapping("/rentals")
 	public ResponseEntity<Object> getAllUsers() {
 		List<Rental> rentals = rentalService.getAllRentals();
-		List<RentalDTO> rentalDTOS = rentals.stream().map(this::convertToDto).toList();
+		List<RentalResponse> rentalDTOS = rentals.stream().map(this::convertToResponse).toList();
 
 		return ResponseHandler.generateResponse("rentals", HttpStatus.OK, rentalDTOS);
 	}
@@ -50,32 +48,13 @@ public class RentalController {
 	@Operation(summary = "Create new rental")
 	@PostMapping(value = "/rentals", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> createRental(
-			@RequestParam("name") String name,
-			@RequestParam("surface") Float surface,
-			@RequestParam("price") Float price,
-			@RequestParam("picture") MultipartFile file,
-			@RequestParam("description") String description,
-			Principal principal
-	) throws IOException {
-		String pictureName = storageService.store(file);
-
-		// FIXME : move this to rental service
-		User owner = userService.findByEmail(principal.getName());
-
-		Rental rental = new Rental();
-		rental.setName(name);
-		rental.setSurface(surface);
-		rental.setPrice(price);
-		rental.setPicture(rentalService.getPictureLocation(pictureName));
-		rental.setDescription(description);
-		rental.setOwner(owner);
-		rental.setCreatedAt(new Date());
-		rental.setUpdatedAt(new Date());
-
+		@ModelAttribute RentalRequest rentalRequest,
+		Principal principal
+	) {
 		ResponseEntity<Object> response;
 
 		try {
-			rentalService.createRental(rental);
+			rentalService.createRental(rentalRequest, principal);
 			response = ResponseHandler.generateResponse("message", HttpStatus.CREATED, "Rental created !");
 		} catch (Exception e) {
 			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to create rental");
@@ -86,26 +65,23 @@ public class RentalController {
 
 	@Operation(summary = "Get rental by id")
 	@GetMapping("/rentals/{id}")
-	public ResponseEntity<RentalDTO> getRentalById(@PathVariable Integer id) {
+	public ResponseEntity<RentalResponse> getRentalById(@PathVariable Integer id) {
 		Rental rental = rentalService.getRental(id);
-		RentalDTO rentalDTO = convertToDto(rental);
+		RentalResponse rentalResponse = convertToResponse(rental);
 
-		return ResponseEntity.ok(rentalDTO);
+		return ResponseEntity.ok(rentalResponse);
 	}
 
 	@Operation(summary = "Edit one rental")
 	@PutMapping(value = "/rentals/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> updateRental(
 			@PathVariable Integer id,
-			@RequestParam("name") String name,
-			@RequestParam("surface") Float surface,
-			@RequestParam("price") Float price,
-			@RequestParam("description") String description
+			@ModelAttribute RentalRequest rentalRequest
 	) {
 		ResponseEntity<Object> response;
 
 		try {
-			rentalService.updateRental(id, name, surface, price, description);
+			rentalService.updateRental(id, rentalRequest);
 			response = ResponseHandler.generateResponse("message", HttpStatus.OK, "Rental updated !");
 		} catch (Exception e) {
 			response = ResponseHandler.generateResponse("message", HttpStatus.BAD_REQUEST, "Failed to update rental");
@@ -119,8 +95,8 @@ public class RentalController {
 		return storageService.retrieve(pictureName);
 	}
 
-	private RentalDTO convertToDto(Rental rental) {
-		return modelMapper.map(rental, RentalDTO.class);
+	private RentalResponse convertToResponse(Rental rental) {
+		return modelMapper.map(rental, RentalResponse.class);
 	}
 	
 }

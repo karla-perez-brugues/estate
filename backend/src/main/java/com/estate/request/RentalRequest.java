@@ -2,23 +2,29 @@ package com.estate.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class RentalCreationRequest {
-    private Integer id;
+public class RentalRequest {
+
     private String name;
     private Float surface;
     private Float price;
-    private MultipartFile picture;
     private String description;
-    private Integer ownerId;
+    private MultipartFile picture;
 
-    public RentalCreationRequest() {}
+    RentalRequest() {}
 
-    public Integer getId() {
-        return id;
+    RentalRequest(String name, Float surface, Float price, String description) {
+        this.name = name;
+        this.surface = surface;
+        this.price = price;
+        this.description = description;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    RentalRequest(String name, Float surface, Float price, String description, MultipartFile picture) {
+        this.name = name;
+        this.surface = surface;
+        this.price = price;
+        this.description = description;
+        this.picture = picture;
     }
 
     public String getName() {
@@ -45,14 +51,6 @@ public class RentalCreationRequest {
         this.price = price;
     }
 
-    public MultipartFile getPicture() {
-        return picture;
-    }
-
-    public void setPicture(MultipartFile picture) {
-        this.picture = picture;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -61,11 +59,11 @@ public class RentalCreationRequest {
         this.description = description;
     }
 
-    public Integer getOwnerId() {
-        return ownerId;
+    public MultipartFile getPicture() {
+        return picture;
     }
 
-    public void setOwnerId(Integer ownerId) {
-        this.ownerId = ownerId;
+    public void setPicture(MultipartFile picture) {
+        this.picture = picture;
     }
 }

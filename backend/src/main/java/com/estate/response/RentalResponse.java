@@ -1,11 +1,11 @@
-package com.estate.dto;
+package com.estate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class RentalDTO {
+public class RentalResponse {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     private Integer id;
@@ -18,9 +18,9 @@ public class RentalDTO {
     private String createdAt;
     private String updatedAt;
 
-    public RentalDTO() {}
+    public RentalResponse() {}
 
-    public RentalDTO(Integer id, String name, Integer surface, Integer price, String picture, String description, Integer ownerId, String createdAt, String updatedAt) {
+    public RentalResponse(Integer id, String name, Integer surface, Integer price, String picture, String description, Integer ownerId, String createdAt, String updatedAt) {
         this.id = id;
         this.name = name;
         this.surface = surface;
