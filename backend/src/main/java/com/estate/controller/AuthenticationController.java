@@ -1,6 +1,6 @@
 package com.estate.controller;
 
-import com.estate.dto.UserDTO;
+import com.estate.response.UserResponse;
 import com.estate.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
@@ -44,15 +44,11 @@ public class AuthenticationController {
 
 	@Operation(summary = "Get current authenticated user details")
 	@GetMapping("/me") 
-	public ResponseEntity<UserDTO> me(Authentication authentication) {
+	public ResponseEntity<UserResponse> me(Authentication authentication) {
 		User user = (User) authentication.getPrincipal();
-		UserDTO userDTO = convertToDTO(user);
+		UserResponse userResponse = modelMapper.map(user, UserResponse.class);
 
-		return ResponseEntity.ok(userDTO);
-	}
-
-	private UserDTO convertToDTO(User user) {
-		return modelMapper.map(user, UserDTO.class);
+		return ResponseEntity.ok(userResponse);
 	}
 
 }

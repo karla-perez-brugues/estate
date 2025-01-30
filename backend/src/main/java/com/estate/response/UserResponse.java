@@ -1,11 +1,11 @@
-package com.estate.dto;
+package com.estate.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class UserDTO {
+public class UserResponse {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     private Integer id;
@@ -14,9 +14,9 @@ public class UserDTO {
     private String createdAt;
     private String updatedAt;
 
-    public UserDTO() {}
+    public UserResponse() {}
 
-    public UserDTO(
+    public UserResponse(
         Integer id,
         String name,
         String email,

@@ -1,6 +1,6 @@
 package com.estate.controller;
 
-import com.estate.dto.UserDTO;
+import com.estate.response.UserResponse;
 import com.estate.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
@@ -25,15 +25,11 @@ public class UserController {
 
 	@Operation(summary = "Get user by id")
 	@GetMapping("/user/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
+	public ResponseEntity<UserResponse> getUserById(@PathVariable Integer id) {
 		User user = userService.findById(id);
-		UserDTO userDTO = convertToDTO(user);
+		UserResponse userResponse = modelMapper.map(user, UserResponse.class);
 
-		return ResponseEntity.ok(userDTO);
-	}
-
-	private UserDTO convertToDTO(User user) {
-		return modelMapper.map(user, UserDTO.class);
+		return ResponseEntity.ok(userResponse);
 	}
 	
 }
