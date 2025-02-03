@@ -1,6 +1,6 @@
 package com.estate.controller;
 
-import com.estate.response.UserResponse;
+import com.estate.controller.response.UserResponse;
 import com.estate.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;

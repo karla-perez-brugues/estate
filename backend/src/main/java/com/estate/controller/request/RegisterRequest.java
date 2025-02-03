@@ -1,4 +1,4 @@
-package com.estate.authentication;
+package com.estate.controller.request;
 
 public class RegisterRequest {
     private String name;

@@ -1,6 +1,6 @@
 package com.estate.service;
 
-import com.estate.request.RentalRequest;
+import com.estate.controller.request.RentalRequest;
 import com.estate.exception.ResourceNotFoundException;
 import com.estate.model.Rental;
 import com.estate.model.User;

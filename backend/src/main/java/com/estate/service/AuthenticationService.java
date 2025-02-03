@@ -8,9 +8,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.estate.authentication.AuthenticationRequest;
-import com.estate.authentication.AuthenticationResponse;
-import com.estate.authentication.RegisterRequest;
+import com.estate.controller.request.AuthenticationRequest;
+import com.estate.controller.response.AuthenticationResponse;
+import com.estate.controller.request.RegisterRequest;
 import com.estate.exception.ResourceNotFoundException;
 import com.estate.model.User;
 import com.estate.repository.UserRepository;

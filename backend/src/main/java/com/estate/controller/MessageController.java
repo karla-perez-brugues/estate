@@ -1,6 +1,6 @@
 package com.estate.controller;
 
-import com.estate.request.MessageRequest;
+import com.estate.controller.request.MessageRequest;
 import com.estate.handler.ResponseHandler;
 import com.estate.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;

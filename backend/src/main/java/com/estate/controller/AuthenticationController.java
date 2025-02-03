@@ -1,15 +1,15 @@
 package com.estate.controller;
 
-import com.estate.response.UserResponse;
+import com.estate.controller.response.UserResponse;
 import com.estate.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estate.authentication.AuthenticationRequest;
-import com.estate.authentication.AuthenticationResponse;
-import com.estate.authentication.RegisterRequest;
+import com.estate.controller.request.AuthenticationRequest;
+import com.estate.controller.response.AuthenticationResponse;
+import com.estate.controller.request.RegisterRequest;
 import com.estate.service.AuthenticationService;
 
 import org.springframework.web.bind.annotation.GetMapping;

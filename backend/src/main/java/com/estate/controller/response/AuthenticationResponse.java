@@ -1,4 +1,4 @@
-package com.estate.authentication;
+package com.estate.controller.response;
 
 public class AuthenticationResponse {
     

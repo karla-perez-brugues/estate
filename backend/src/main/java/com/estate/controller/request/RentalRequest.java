@@ -1,4 +1,4 @@
-package com.estate.request;
+package com.estate.controller.request;
 
 import org.springframework.web.multipart.MultipartFile;
 

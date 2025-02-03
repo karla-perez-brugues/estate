@@ -1,4 +1,4 @@
-package com.estate.request;
+package com.estate.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

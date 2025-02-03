@@ -4,7 +4,7 @@ import com.estate.model.Message;
 import com.estate.model.Rental;
 import com.estate.model.User;
 import com.estate.repository.MessageRepository;
-import com.estate.request.MessageRequest;
+import com.estate.controller.request.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

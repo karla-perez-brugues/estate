@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-import com.estate.request.RentalRequest;
-import com.estate.response.RentalResponse;
+import com.estate.controller.request.RentalRequest;
+import com.estate.controller.response.RentalResponse;
 import com.estate.service.RentalService;
 import com.estate.service.StorageService;
 import com.estate.service.UserService;
@@ -90,6 +90,7 @@ public class RentalController {
 		return response;
 	}
 
+	@Operation(summary = "Retrieve rental picture by its name")
 	@GetMapping(value = "/rentals/picture/{pictureName}")
 	public @ResponseBody byte[] getPicture(@PathVariable String pictureName) throws IOException {
 		return storageService.retrieve(pictureName);
