@@ -8,7 +8,6 @@ import com.estate.controller.request.RentalRequest;
 import com.estate.controller.response.RentalResponse;
 import com.estate.service.RentalService;
 import com.estate.service.StorageService;
-import com.estate.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,6 @@ public class RentalController {
 
 	@Autowired
 	private StorageService storageService;
-
-	@Autowired
-	private UserService userService;
 
 	@Operation(summary = "Get all rentals")
 	@GetMapping("/rentals")
