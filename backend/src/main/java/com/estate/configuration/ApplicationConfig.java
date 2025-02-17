@@ -3,6 +3,7 @@ package com.estate.configuration;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,8 @@ import javax.crypto.spec.SecretKeySpec;
 @Configuration
 public class ApplicationConfig {
 
-    private final String SECRET_KEY = "f5a2c1e3d7b9e1c6f4a2b8e9c6d4f7e1b3c5d8a7e2b4c6a1f9e3d5a2b7c4e1f3";
+    @Value("${SECRET_KEY}")
+    private String SECRET_KEY;
 
     @Autowired
     private UserRepository userRepository;
