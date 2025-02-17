@@ -15,6 +15,7 @@ Then, at the root of the project, create a file named `.env` with these 3 proper
 - `SPRING_DATASOURCE_URL`
 - `SPRING_DATASOURCE_USERNAME`
 - `SPRING_DATASOURCE_PASSWORD`
+- `SECRET_KEY`
 
 The different tables will be created automatically when the development server is started.
 

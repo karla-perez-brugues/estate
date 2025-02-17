@@ -1,14 +1,16 @@
 package com.estate.service;
 
 import com.estate.controller.request.RentalRequest;
+import com.estate.controller.response.GenericResponse;
 import com.estate.exception.ResourceNotFoundException;
 import com.estate.model.Rental;
 import com.estate.model.User;
 import com.estate.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -29,41 +31,72 @@ public class RentalService {
         return rentalRepository.findAll();
     }
 
-    public void createRental(RentalRequest rentalRequest, Principal principal) throws IOException {
-        String pictureName = storageService.store(rentalRequest.getPicture());
+    public ResponseEntity<GenericResponse> createRental(RentalRequest rentalRequest, Principal principal) {
+        GenericResponse messageResponse = new GenericResponse();
+        HttpStatus httpStatus;
 
-        User owner = userService.findByEmail(principal.getName());
+        try {
+            String pictureName = storageService.store(rentalRequest.getPicture());
 
-        Rental rental = new Rental();
-        rental.setName(rentalRequest.getName());
-        rental.setSurface(rentalRequest.getSurface());
-        rental.setPrice(rentalRequest.getPrice());
-        rental.setPicture(getPictureLocation(pictureName));
-        rental.setDescription(rentalRequest.getDescription());
-        rental.setOwner(owner);
-        rental.setCreatedAt(new Date());
-        rental.setUpdatedAt(new Date());
+            User owner = userService.findByEmail(principal.getName());
 
-        rentalRepository.save(rental);
+            Rental rental = new Rental();
+            rental.setName(rentalRequest.getName());
+            rental.setSurface(rentalRequest.getSurface());
+            rental.setPrice(rentalRequest.getPrice());
+            rental.setPicture(getPictureLocation(pictureName));
+            rental.setDescription(rentalRequest.getDescription());
+            rental.setOwner(owner);
+            rental.setCreatedAt(new Date());
+            rental.setUpdatedAt(new Date());
+
+            rentalRepository.save(rental);
+
+            messageResponse.setMessage("Rental created !");
+            httpStatus = HttpStatus.CREATED;
+        } catch (Exception e) {
+            messageResponse.setMessage("Failed to create rental");
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(messageResponse);
+
     }
 
     public Rental getRental(Integer id) {
         return rentalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
     }
 
-    public void updateRental(
+    public ResponseEntity<GenericResponse> updateRental(
             Integer id,
             RentalRequest rentalRequest
-        ) {
-        Rental rental = getRental(id);
+    ) {
+        GenericResponse messageResponse = new GenericResponse();
+        HttpStatus httpStatus;
 
-        rental.setName(rentalRequest.getName());
-        rental.setSurface(rentalRequest.getSurface());
-        rental.setPrice(rentalRequest.getPrice());
-        rental.setDescription(rentalRequest.getDescription());
-        rental.setUpdatedAt(new Date());
+        try {
+            Rental rental = getRental(id);
 
-        rentalRepository.save(rental);
+            rental.setName(rentalRequest.getName());
+            rental.setSurface(rentalRequest.getSurface());
+            rental.setPrice(rentalRequest.getPrice());
+            rental.setDescription(rentalRequest.getDescription());
+            rental.setUpdatedAt(new Date());
+
+            rentalRepository.save(rental);
+
+            messageResponse.setMessage("Rental updated !");
+            httpStatus = HttpStatus.OK;
+        } catch (Exception e) {
+            messageResponse.setMessage("Failed to update rental");
+            httpStatus = HttpStatus.BAD_REQUEST;
+        }
+
+        return ResponseEntity
+                .status(httpStatus)
+                .body(messageResponse);
     }
 
     public String getPictureLocation(String pictureName) {

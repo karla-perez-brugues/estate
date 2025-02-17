@@ -1,7 +1,6 @@
 package com.estate.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
 public class StorageService {
@@ -21,7 +21,7 @@ public class StorageService {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = UUID.randomUUID() + "." + getFileExtension(file.getOriginalFilename());
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -29,12 +29,26 @@ public class StorageService {
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return file.getOriginalFilename();
+        return fileName;
     }
 
     public byte[] retrieve(String fileName) throws IOException {
         Path filePath = uploadPath.resolve(fileName);
         return Files.readAllBytes(filePath);
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null) {
+            return null;
+        }
+
+        int dotIndex = filename.lastIndexOf(".");
+
+        if (dotIndex >= 0) {
+            return filename.substring(dotIndex + 1);
+        }
+
+        return "";
     }
 
 }
